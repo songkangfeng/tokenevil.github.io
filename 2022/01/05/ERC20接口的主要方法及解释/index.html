@@ -11,7 +11,7 @@
 
 
 
-<title>理解人性 | Token Evil</title>
+<title>ERC20接口的主要方法及解释 | Token Evil</title>
 
 
 
@@ -189,21 +189,21 @@
     
     <article class="post-wrap">
         <header class="post-header">
-            <h1 class="post-title">理解人性</h1>
+            <h1 class="post-title">ERC20接口的主要方法及解释</h1>
             
                 <div class="post-meta">
                     
 
                     
                         <span class="post-time">
-                        Date: <a href="#">December 31, 2021&nbsp;&nbsp;14:34:03</a>
+                        Date: <a href="#">January 5, 2022&nbsp;&nbsp;23:46:36</a>
                         </span>
                     
                     
                         <span class="post-category">
                     Category:
                             
-                                <a href="/categories/%E4%B9%A6/">书</a>
+                                <a href="/categories/%E4%BB%A3%E7%A0%81/">代码</a>
                             
                         </span>
                     
@@ -212,8 +212,77 @@
         </header>
 
         <div class="post-content">
-            <h1 id="理解人性"><a href="#理解人性" class="headerlink" title="理解人性"></a>理解人性</h1><p>精神分析经典书 </p>
-<h2 id="下载地址"><a href="#下载地址" class="headerlink" title="下载地址"></a>下载地址</h2><p><a target="_blank" rel="noopener" href="https://github.com/tokenevil/book/tree/main/blockchain/%E7%90%86%E8%A7%A3%E4%BA%BA%E6%80%A7">https://github.com/tokenevil/book/tree/main/blockchain/%E7%90%86%E8%A7%A3%E4%BA%BA%E6%80%A7</a></p>
+            <h1 id="ERC20接口的主要方法及解释"><a href="#ERC20接口的主要方法及解释" class="headerlink" title="ERC20接口的主要方法及解释"></a>ERC20接口的主要方法及解释</h1><p>ERC20的标准接口是这样的:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">contract ERC20 &#123;</span><br><span class="line">      function name() constant returns (string name)</span><br><span class="line">      function symbol() constant returns (string symbol)</span><br><span class="line">      function decimals() constant returns (uint8 decimals)</span><br><span class="line">      function totalSupply() constant returns (uint totalSupply);</span><br><span class="line">      function balanceOf(address _owner) constant returns (uint balance);</span><br><span class="line">      function transfer(address _to, uint _value) returns (bool success);</span><br><span class="line">      function transferFrom(address _from, address _to, uint _value) returns (bool success);</span><br><span class="line">      function approve(address _spender, uint _value) returns (bool success);</span><br><span class="line">      function allowance(address _owner, address _spender) constant returns (uint remaining);</span><br><span class="line">      event Transfer(address indexed _from, address indexed _to, uint _value);</span><br><span class="line">      event Approval(address indexed _owner, address indexed _spender, uint _value);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="下面对上面的内容做一个简单的解释："><a href="#下面对上面的内容做一个简单的解释：" class="headerlink" title="下面对上面的内容做一个简单的解释："></a>下面对上面的内容做一个简单的解释：</h2><ul>
+<li><strong>name</strong></li>
+</ul>
+<blockquote>
+<p>返回ERC20代币的名字，例如”My test token”。</p>
+</blockquote>
+<ul>
+<li><strong>symbol</strong></li>
+</ul>
+<blockquote>
+<p>返回代币的简称，例如：MTT，这个也是我们一般在代币交易所看到的名字。</p>
+</blockquote>
+<ul>
+<li><strong>decimals</strong></li>
+</ul>
+<blockquote>
+<p>返回token使用的小数点后几位。比如如果设置为3，就是支持0.001表示。</p>
+</blockquote>
+<ul>
+<li><strong>totalSupply</strong></li>
+</ul>
+<blockquote>
+<p>返回token的总供应量</p>
+</blockquote>
+<ul>
+<li><strong>balanceOf</strong></li>
+</ul>
+<blockquote>
+<p>返回某个地址(账户)的账户余额</p>
+</blockquote>
+<ul>
+<li><strong>transfer</strong></li>
+</ul>
+<blockquote>
+<p>从代币合约的调用者地址上转移_value的数量token到的地址_to，并且必须触发Transfer事件。</p>
+</blockquote>
+<ul>
+<li><strong>transferFrom</strong></li>
+</ul>
+<blockquote>
+<p>从地址_from发送数量为_value的token到地址_to,必须触发Transfer事件。transferFrom方法用于允许合同代理某人转移token。条件是from账户必须经过了approve。这个后面会举例说明。</p>
+</blockquote>
+<ul>
+<li><strong>approve</strong></li>
+</ul>
+<blockquote>
+<p>允许_spender多次取回您的帐户，最高达_value金额。 如果再次调用此函数，它将以_value覆盖当前的余量。</p>
+</blockquote>
+<ul>
+<li><strong>allowance</strong></li>
+</ul>
+<blockquote>
+<p>返回_spender仍然被允许从_owner提取的金额。</p>
+</blockquote>
+<h2 id="后面三个方法不好理解，这里还需要补充说明一下：-approve是授权第三方（比如某个服务合约）从发送者账户转移代币，然后通过-transferFrom-函数来执行具体的转移操作。"><a href="#后面三个方法不好理解，这里还需要补充说明一下：-approve是授权第三方（比如某个服务合约）从发送者账户转移代币，然后通过-transferFrom-函数来执行具体的转移操作。" class="headerlink" title="后面三个方法不好理解，这里还需要补充说明一下： approve是授权第三方（比如某个服务合约）从发送者账户转移代币，然后通过 transferFrom() 函数来执行具体的转移操作。"></a>后面三个方法不好理解，这里还需要补充说明一下： approve是授权第三方（比如某个服务合约）从发送者账户转移代币，然后通过 transferFrom() 函数来执行具体的转移操作。</h2><p>举例说明，如果账户A有1000个ETH，想允许B账户随意调用他的100个ETH，过程如下：</p>
+<ul>
+<li><ol>
+<li>A账户按照以下形式调用approve函数approve(B,100)  </li>
+</ol>
+</li>
+<li><ol start="2">
+<li>B账户想用这100个ETH中的10个ETH给C账户，调用transferFrom(A, C, 10)  </li>
+</ol>
+</li>
+<li><ol start="3">
+<li>调用allowance(A, B)可以查看B账户还能够调用A账户多少个token  </li>
+</ol>
+</li>
+</ul>
 
         </div>
 
@@ -256,10 +325,8 @@
         </section>
         <section class="post-nav">
             
-                <a class="prev" rel="prev" href="/2022/01/05/ERC20%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%B8%BB%E8%A6%81%E6%96%B9%E6%B3%95%E5%8F%8A%E8%A7%A3%E9%87%8A/">ERC20接口的主要方法及解释</a>
             
-            
-            <a class="next" rel="next" href="/2021/12/31/%E5%B0%8F%E5%B2%9B%E7%BB%8F%E6%B5%8E%E5%AD%A6/">小岛经济学</a>
+            <a class="next" rel="next" href="/2021/12/31/%E7%90%86%E8%A7%A3%E4%BA%BA%E6%80%A7/">理解人性</a>
             
         </section>
 
